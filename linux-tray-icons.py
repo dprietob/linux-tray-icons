@@ -27,6 +27,12 @@ def menu():
     handle_memcached.set_active(is_memcached_active())
     handle_memcached.connect("activate", update_memcached)
     menu.append(handle_memcached)
+    
+    # Varnish option
+    handle_varnish = gtk.CheckMenuItem(label="Varnish service")
+    handle_varnish.set_active(is_varnish_active())
+    handle_varnish.connect("activate", update_varnish)
+    menu.append(handle_varnish)
 
     # Apache2 option
     handle_apache2 = gtk.CheckMenuItem(label="Apache2 service")
@@ -67,6 +73,12 @@ def update_memcached(_):
         os.system("systemctl start memcached")
     else:
         os.system("systemctl stop memcached")
+        
+def update_varnish(_):
+    if _.get_active():
+        os.system("systemctl start varnish")
+    else:
+        os.system("systemctl stop varnish")
 
 def update_apache2(_):
     if _.get_active():
@@ -101,6 +113,9 @@ def is_mysql_active():
 
 def is_memcached_active():
     return os.system("systemctl status memcached --no-pager") == 0
+    
+def is_varnish_active():
+    return os.system("systemctl status varnish --no-pager") == 0
 
 def is_apache_active():
     return os.system("systemctl status apache2 --no-pager") == 0
